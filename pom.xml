@@ -32,23 +32,6 @@
       <version>[2.2,)</version>
     </dependency>
     <dependency>
-      <groupId>org.apache.kafka</groupId>
-      <artifactId>kafka_2.10</artifactId>
-      <version>0.8.2.1</version>
-      <type>jar</type>
-    </dependency>
-    <dependency>
-        <groupId>org.apache.hadoop</groupId>
-        <artifactId>hadoop-core</artifactId>
-        <version>0.20.2</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.hbase</groupId>
-      <artifactId>hbase-client</artifactId>
-      <version>0.98.7-hadoop2</version>
-      <type>jar</type>
-    </dependency>
-    <dependency>
 	<groupId>org.apache.spark</groupId>
 	<artifactId>spark-core_2.10</artifactId>
 	<version>1.5.1</version>
@@ -63,9 +46,50 @@
 	<artifactId>spark-streaming-kafka_2.10</artifactId>
 	<version>1.5.1</version>
     </dependency>
-
-  </dependencies>
-  
-  
+    <dependency>
+	<groupId>org.apache.kafka</groupId>
+	<artifactId>kafka_2.11</artifactId>
+	<version>0.8.2.2</version>
+      <type>jar</type>
+    </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.3</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <filters>
+                        <filter>
+                            <artifact>*:*</artifact>
+                            <excludes>
+                                <exclude>META-INF/*.SF</exclude>
+                                <exclude>META-INF/*.DSA</exclude>
+                                <exclude>META-INF/*.RSA</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
+                    <finalName>uber-${project.artifactId}-${project.version}</finalName>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
-    
