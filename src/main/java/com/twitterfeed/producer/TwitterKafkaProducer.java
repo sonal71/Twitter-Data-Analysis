@@ -25,26 +25,33 @@ public final class TwitterKafkaProducer {
         final Producer<String, String> producer = new Producer<String, String>(config);
         
         StatusListener listener = new StatusListener() {
+            @Override
             public void onStatus(Status status) {
-                String msg = "Hello@" + status.getUser().getScreenName() + " - " + status.getText();
+                System.out.println(status.toString());
+                String msg = "@" + status.getUser().getScreenName() + " - " + status.getText();
                 KeyedMessage<String, String> data = new KeyedMessage<String, String>("test", msg);
+//                System.out.println(msg);
                 producer.send(data);
             }
+            @Override
             public void onDeletionNotice(StatusDeletionNotice statusDeletionNotice) {
                 producer.close();
                 System.out.println("Got a status deletion notice id:" + statusDeletionNotice.getStatusId());
             }
+            @Override
             public void onTrackLimitationNotice(int numberOfLimitedStatuses) {
                 System.out.println("Got track limitation notice:" + numberOfLimitedStatuses);
             }
+            @Override
             public void onScrubGeo(long userId, long upToStatusId) {
                 System.out.println("Got scrub_geo event userId:" + userId + " upToStatusId:" + upToStatusId);
             }
+            @Override
             public void onStallWarning(StallWarning warning) {
                 System.out.println("Got stall warning:" + warning);
             }
+            @Override
             public void onException(Exception ex) {
-                ex.printStackTrace();
             }
         };
         TwitterStream twitterStream = new TwitterStreamFactory().getInstance();
